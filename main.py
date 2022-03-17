@@ -98,7 +98,18 @@ def create_table():
 	conn.close()
 
 	
-
+def website_exists(website):
+	conn = sqlite3.connect('database.db')
+	statement = '''SELECT * FROM Manager WHERE Website=?;'''
+	cur = conn.cursor()
+	items = cur.execute(statement,(website,))
+	ans = items.fetchone()
+	conn.close()
+	if ans is None:
+		return False
+	else:
+		return True
+	
 
 def create_new_password():
 	conn = sqlite3.connect('database.db')
@@ -106,7 +117,9 @@ def create_new_password():
 	VALUES(?,?,?)
 	'''
 	website = input('Enter Website name: ')
-	
+	if website_exists(website)==True:
+		print(f'Record for {website} already exists')
+		return
 	permission = input('Do you want me to generate a password for you? yes or no : ')
 	
 	if(permission == 'yes'):
